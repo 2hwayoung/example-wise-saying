@@ -1,4 +1,4 @@
-package common.utils;
+package standard;
 
 import java.io.*;
 import java.util.Scanner;

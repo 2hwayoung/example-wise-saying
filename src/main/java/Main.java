@@ -1,7 +1,3 @@
-import wiseSaying.WiseSayingController;
-import wiseSaying.repository.WiseSayingFileRepository;
-import wiseSaying.WiseSayingService;
-
 import java.util.Scanner;
 
 public class Main {

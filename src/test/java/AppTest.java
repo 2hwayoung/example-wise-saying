@@ -1,8 +1,5 @@
 
-import common.utils.TestUtil;
-import wiseSaying.WiseSayingController;
-import wiseSaying.repository.WiseSayingFileRepository;
-import wiseSaying.WiseSayingService;
+import standard.TestUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -32,13 +29,18 @@ class AppTest {
     }
 
     public static String run(String input) {
-        Scanner scanner = TestUtil.genScanner(input);
+        Scanner scanner = TestUtil.genScanner(input + "종료\n");
         out = TestUtil.setOutToByteArray();
 
         App app = new App(scanner);
         app.run();
 
         return out.toString();
+    }
+
+    public static void makeSample(int cnt) {
+        App app = new App(null);
+        app.makeSampleData(cnt);
     }
 
 }

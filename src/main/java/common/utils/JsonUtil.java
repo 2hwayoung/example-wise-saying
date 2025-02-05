@@ -13,7 +13,7 @@ public class JsonUtil {
 
         jsonBuilder.append("[\n");
 
-        String str = mapList.stream() // map들이 들어있다
+        String str = mapList.stream()
                 .map(JsonUtil::mapToJson)
                 .map(s -> "    " + s)
                 .map(s -> s.replaceAll("\n", "\n    "))
@@ -34,8 +34,8 @@ public class JsonUtil {
 
         String str = map.keySet().stream()
                 .map(k -> map.get(k) instanceof String
-                        ? "\t\"%s\" : \"%s\"".formatted(k, map.get(k))
-                        : "\t\"%s\" : %s".formatted(k, map.get(k))
+                        ? "    \"%s\" : \"%s\"".formatted(k, map.get(k))
+                        : "    \"%s\" : %s".formatted(k, map.get(k))
                 ).collect(Collectors.joining(",\n"));
 
         jsonBuilder.append(str);

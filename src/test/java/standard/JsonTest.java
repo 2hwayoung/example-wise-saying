@@ -1,5 +1,7 @@
-package common.utils;
+package standard;
 
+import common.utils.FileUtil;
+import common.utils.JsonUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -8,12 +10,14 @@ import wiseSaying.WiseSaying;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JsonUtilTest {
+public class JsonTest {
 
     @BeforeAll
     static void beforeAll() {
@@ -27,7 +31,7 @@ public class JsonUtilTest {
 
     @Test
     @DisplayName("Map을 Json으로 변환1 - 속성이 1개")
-    void MapToJson() {
+    void t1() {
 
         Map<String, Object> map = Map.of("name", "홍길동");
 
@@ -43,7 +47,11 @@ public class JsonUtilTest {
 
     @Test
     @DisplayName("Map을 Json으로 변환2 - 속성이 2개")
-    void MapToJsonTwoItems() {
+    void t2() {
+
+        // Map은 순서를 보장하지 않는다.
+        // 순서 보장 -> LinkedHashMap
+//        Map<String, Object> map = Map.of("name", "홍길동", "home", "서울");
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("name", "홍길동");
@@ -62,7 +70,7 @@ public class JsonUtilTest {
 
     @Test
     @DisplayName("Map을 Json으로 변환3 - 속성이 3개, 문자와 숫자 혼합")
-    void MapToJsonThreeItems() {
+    void t3() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("name", "홍길동");
         map.put("home", "서울");
@@ -82,7 +90,7 @@ public class JsonUtilTest {
 
     @Test
     @DisplayName("WiseSaying을 Map으로 변환 -> Json으로 변환")
-    void WiseSayingToJson() {
+    void t4() {
 
         WiseSaying wiseSaying = new WiseSaying(1, "aaa", "bbb");
         Map<String, Object> wiseSayingMap = wiseSaying.toMap();
@@ -101,7 +109,7 @@ public class JsonUtilTest {
 
     @Test
     @DisplayName("Map을 넘기면 Json 파일로 저장하기")
-    void MapToJsonFile() {
+    void t5() {
 
         WiseSaying wiseSaying = new WiseSaying(1, "aaa", "bbb");
         Map<String, Object> wiseSayingMap = wiseSaying.toMap();
@@ -126,7 +134,7 @@ public class JsonUtilTest {
 
     @Test
     @DisplayName("Json 문자열을 Map으로 변환하기")
-    void JsonToMap() {
+    void t6() {
 
         String jsonStr = """
                 {
@@ -148,13 +156,9 @@ public class JsonUtilTest {
 
     @Test
     @DisplayName("파일명을 넘기면 Map으로 읽어오기")
-    void getFileToMap() {
+    void t7() {
 
-        WiseSaying wiseSaying = new WiseSaying(1, "aaa", "bbb");
-        Map<String, Object> wiseSayingMap = wiseSaying.toMap();
-
-        String filePath = "db/test/%d.json".formatted(wiseSaying.getId());
-        JsonUtil.writeAsMap(filePath, wiseSayingMap);
+        String filePath = "db/test/%d.json".formatted(1);
 
         Map<String, Object> map = JsonUtil.readAsMap(filePath);
 
@@ -167,7 +171,7 @@ public class JsonUtilTest {
 
     @Test
     @DisplayName("Map을 WiseSaying으로 변환")
-    void mapToWiseSaying() {
+    void t8() {
 
         String filePath = "db/test/%d.json".formatted(1);
         Map<String, Object> map = JsonUtil.readAsMap(filePath);
@@ -177,6 +181,40 @@ public class JsonUtilTest {
         assertThat(wiseSaying.getId()).isEqualTo(1);
         assertThat(wiseSaying.getContent()).isEqualTo("aaa");
         assertThat(wiseSaying.getAuthor()).isEqualTo("bbb");
+
+    }
+
+    @Test
+    @DisplayName("wiseSaying list를 json 문자열로 변환")
+    void t9() {
+
+        WiseSaying wiseSaying1 = new WiseSaying(1, "aaa", "bbb");
+        WiseSaying wiseSaying2 = new WiseSaying(2, "ccc", "ddd");
+
+        List<WiseSaying> wiseSayings = List.of(wiseSaying1, wiseSaying2);
+
+        List<Map<String, Object>> mapList = wiseSayings.stream()
+                .map(WiseSaying::toMap)
+                .toList();
+
+
+        String jsonStr = JsonUtil.listToJson(mapList);
+
+        assertThat(jsonStr)
+                .isEqualTo("""
+                        [
+                            {
+                                "id" : 1,
+                                "content" : "aaa",
+                                "author" : "bbb"
+                            },
+                            {
+                                "id" : 2,
+                                "content" : "ccc",
+                                "author" : "ddd"
+                            }
+                        ]
+                        """.stripIndent().trim());
 
     }
 }

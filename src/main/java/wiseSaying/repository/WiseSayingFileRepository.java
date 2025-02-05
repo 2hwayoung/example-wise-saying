@@ -6,12 +6,7 @@ import common.utils.JsonUtil;
 import wiseSaying.Page;
 import wiseSaying.WiseSaying;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class WiseSayingFileRepository implements WiseSayingRepository {
@@ -68,6 +63,17 @@ public class WiseSayingFileRepository implements WiseSayingRepository {
         return pageOf(searchedWiseSayings, itemsPerPage, page);
     }
 
+    @Override
+    public void createTable() {
+        FileUtil.deleteForce(DB_PATH);
+        FileUtil.createDir(DB_PATH);
+    }
+
+    @Override
+    public void truncateTable() {
+        FileUtil.deleteForce(DB_PATH);
+    }
+
     public Page<WiseSaying> findAll(int itemsPerPage, int page) {
         List<WiseSaying> sortedWiseSayings = findAll().stream()
                 .sorted(Comparator.comparing(WiseSaying::getId).reversed())
@@ -76,7 +82,7 @@ public class WiseSayingFileRepository implements WiseSayingRepository {
         return pageOf(sortedWiseSayings, itemsPerPage, page);
     }
 
-    List<WiseSaying> findAll() {
+    public List<WiseSaying> findAll() {
         return FileUtil.getPaths(DB_PATH).stream()
                 .map(Path::toString)
                 .filter(path -> path.endsWith(".json"))

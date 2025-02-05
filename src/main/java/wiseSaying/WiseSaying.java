@@ -1,15 +1,14 @@
 package wiseSaying;
 
-import common.utils.JsonUtil;
 import lombok.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 public class WiseSaying {
     private int id;
